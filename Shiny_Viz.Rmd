@@ -1,0 +1,54 @@
+---
+title: "US Crime Data"
+output: 
+  flexdashboard::flex_dashboard:
+    css: styles_Shiny.css
+runtime: shiny
+---
+
+
+```{r Setup, include=FALSE}
+
+```
+
+
+
+Crime Rates By State
+===================================== 
+
+ 
+ 
+ 
+ 
+Crime Rates By Regions / Divisions
+===================================== 
+
+ 
+ 
+ 
+ 
+Clearance Rates By Regions / Divisions
+===================================== 
+
+ 
+ 
+ 
+ 
+Murder Weapons By State
+===================================== 
+
+ 
+ 
+ 
+ 
+NYC Crime Rates 
+===================================== 
+
+
+
+
+
+
+
+About 
+=====================================
