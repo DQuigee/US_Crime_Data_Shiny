@@ -1,0 +1,63 @@
+---
+title: "Data_Loading_Preparation"
+author: "Daniela Quigee (dq2147)"
+date: "6/16/2020"
+output: github_document
+---
+
+```{r Setup}
+library(tidyverse)
+library(readxl)
+library(httr)
+library(rgdal)
+library(rgeos)
+```
+
+
+# Crime In US By State
+
+```{r Data_Input_Crime_In_US_By_State}
+# Reading in Year 2018
+data_state_2018 = read_excel("data/Crime_In_US_By_State/Crime_In_US_By_State_2018.xlsx", range = "A1:K51") %>% 
+  janitor::clean_names() 
+
+# Reading in Year 2017
+data_state_2017 = read_excel("data/Crime_In_US_By_State/Crime_In_US_By_State_2017.xlsx", range = "A1:K51") %>% 
+  janitor::clean_names() 
+
+# Reading in Year 2016
+data_state_2016 = read_excel("data/Crime_In_US_By_State/Crime_In_US_By_State_2016.xlsx", range = "A1:K51") %>% 
+  janitor::clean_names() 
+
+
+# Combing different years
+data_state = bind_rows(
+  data_state_2018,
+  data_state_2017,
+  data_state_2016)
+```
+
+```{r Data_Prep_Crime_In_US_By_State}
+data_state = data_state %>% 
+  mutate(
+    murder_and_nonnegligent_manslaughter_rate_per_100_000 = round(murder_and_nonnegligent_manslaughter/(population/100000), digits = 2),
+    rape_rate_per_100_000 = round(rape/(population/100000), digits = 2),
+    robbery_rate_per_100_000 = round(robbery/(population/100000), digits = 2),
+    aggravated_assault_rate_per_100_000 = round(aggravated_assault/(population/100000), digits = 2),
+    burglary_rate_per_100_000 = round(burglary/(population/100000), digits = 2),
+    larceny_theft_rate_per_100_000 = round(larceny_theft/(population/100000), digits = 2),
+    motor_vehicle_theft_rate_per_100_000 = round(motor_vehicle_theft/(population/100000),  digits = 2)) %>% 
+  select(
+    -murder_and_nonnegligent_manslaughter,
+    -rape,
+    -robbery,
+    -burglary,
+    -aggravated_assault,
+    -larceny_theft,
+    -motor_vehicle_theft,
+    -population) %>% 
+  pivot_longer(
+    murder_and_nonnegligent_manslaughter_rate_per_100_000:motor_vehicle_theft_rate_per_100_000,
+    names_to = "variable_name",
+    values_to = "statistic")
+```

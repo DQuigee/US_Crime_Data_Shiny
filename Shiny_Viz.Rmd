@@ -8,7 +8,20 @@ runtime: shiny
 
 
 ```{r Setup, include=FALSE}
+# Loading necessary libraries
+library(tidyverse)
+library(RColorBrewer)
+library(plotly)
+library(maps)
+library(httr)
+library(shiny)
+library(flexdashboard)
+library(rgdal)
+library(maptools)
+library(sp)
 
+
+knitr::opts_chunk$set(message = FALSE, warning = FALSE)
 ```
 
 
@@ -16,12 +29,63 @@ runtime: shiny
 Crime Rates By State
 ===================================== 
 
+Column {.sidebar data-width=310}
+-----------------------------------------------------------------------
+
+```{r Sidebar_Crime_Data_State}
+
+```
  
+
+Column {.tabset}
+-------------------------------------
+
+### Map
+
+```{r Map_State}
+
+```
+
+
+### Time Plot
+
+```{r Time_Plot_State}
+
+```
+
  
  
  
 Crime Rates By Regions / Divisions
 ===================================== 
+
+
+
+Column {.sidebar data-width=310}
+-----------------------------------------------------------------------
+
+```{r Sidebar_Crime_Data_Region}
+
+```
+ 
+
+Column {.tabset}
+-------------------------------------
+
+### Map
+
+```{r Map_Region}
+
+```
+
+
+### Time Plot
+
+```{r Time_Plot_Region}
+
+```
+
+ 
 
  
  
@@ -30,13 +94,61 @@ Crime Rates By Regions / Divisions
 Clearance Rates By Regions / Divisions
 ===================================== 
 
+
+Column {.sidebar data-width=310}
+-----------------------------------------------------------------------
+
+```{r Sidebar_Clearance_Region}
+
+```
+
+
+
+Column {.tabset}
+-------------------------------------
+
+### Map
+
+```{r Map_Region_Clearance}
+
+
+```
+
+
+ 
+### Time Plot
+
+```{r Time_plot_Region_Clearance}
  
  
- 
- 
+```
+
+
+
 Murder Weapons By State
 ===================================== 
 
+
+Column {.sidebar data-width=310}
+-----------------------------------------------------------------------
+
+```{r Sidebar_Murder_Weapon}
+
+
+```
+
+
+
+
+Column {data-width=800}
+-------------------------------------
+    
+### 
+    
+```{r Murder_Weapon_Plot}
+
+
+```
  
  
  
@@ -45,9 +157,32 @@ NYC Crime Rates
 ===================================== 
 
 
+Column {.sidebar data-width=310}
+-----------------------------------------------------------------------
+
+```{r Sidebar_Crime_Data_NYC}
+
+
+```
 
 
 
+Column {.tabset}
+-------------------------------------
+
+### Map
+
+```{r Map_NYC}
+
+
+```
+
+### Time Plot
+ 
+```{r Time_Plot_NYC}
+
+
+```
 
 
 About 
