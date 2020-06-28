@@ -7,14 +7,14 @@ Daniela Quigee (dq2147)
 library(tidyverse)
 ```
 
-    ## ── Attaching packages ───────────────────────────── tidyverse 1.3.0 ──
+    ## ── Attaching packages ──────────────────────────────────────── tidyverse 1.3.0 ──
 
     ## ✓ ggplot2 3.3.2     ✓ purrr   0.3.4
     ## ✓ tibble  3.0.1     ✓ dplyr   1.0.0
     ## ✓ tidyr   1.1.0     ✓ stringr 1.4.0
     ## ✓ readr   1.3.1     ✓ forcats 0.5.0
 
-    ## ── Conflicts ──────────────────────────────── tidyverse_conflicts() ──
+    ## ── Conflicts ─────────────────────────────────────────── tidyverse_conflicts() ──
     ## x dplyr::filter() masks stats::filter()
     ## x dplyr::lag()    masks stats::lag()
 
@@ -60,6 +60,7 @@ data_state_2016 = read_excel("data/Crime_In_US_By_State/Crime_In_US_By_State_201
   janitor::clean_names() 
 
 
+
 # Combing different years
 data_state = bind_rows(
   data_state_2018,
@@ -90,4 +91,8 @@ data_state = data_state %>%
     murder_and_nonnegligent_manslaughter_rate_per_100_000:motor_vehicle_theft_rate_per_100_000,
     names_to = "variable_name",
     values_to = "statistic")
+```
+
+``` r
+save(data_state, file = "./data/Crime_In_US_By_State//data_state_time.RData")
 ```

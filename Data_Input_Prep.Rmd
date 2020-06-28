@@ -30,6 +30,7 @@ data_state_2016 = read_excel("data/Crime_In_US_By_State/Crime_In_US_By_State_201
   janitor::clean_names() 
 
 
+
 # Combing different years
 data_state = bind_rows(
   data_state_2018,
@@ -60,4 +61,9 @@ data_state = data_state %>%
     murder_and_nonnegligent_manslaughter_rate_per_100_000:motor_vehicle_theft_rate_per_100_000,
     names_to = "variable_name",
     values_to = "statistic")
+```
+
+
+```{r Saving_Data}
+save(data_state, file = "./data/Crime_In_US_By_State//data_state_time.RData")
 ```
