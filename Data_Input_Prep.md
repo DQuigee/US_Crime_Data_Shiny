@@ -7,14 +7,14 @@ Daniela Quigee (dq2147)
 library(tidyverse)
 ```
 
-    ## ── Attaching packages ──────────────────────────────────────── tidyverse 1.3.0 ──
+    ## ── Attaching packages ────────────────────────────── tidyverse 1.3.0 ──
 
     ## ✓ ggplot2 3.3.2     ✓ purrr   0.3.4
     ## ✓ tibble  3.0.1     ✓ dplyr   1.0.0
     ## ✓ tidyr   1.1.0     ✓ stringr 1.4.0
     ## ✓ readr   1.3.1     ✓ forcats 0.5.0
 
-    ## ── Conflicts ─────────────────────────────────────────── tidyverse_conflicts() ──
+    ## ── Conflicts ───────────────────────────────── tidyverse_conflicts() ──
     ## x dplyr::filter() masks stats::filter()
     ## x dplyr::lag()    masks stats::lag()
 
@@ -59,13 +59,98 @@ data_state_2017 = read_excel("data/Crime_In_US_By_State/Crime_In_US_By_State_201
 data_state_2016 = read_excel("data/Crime_In_US_By_State/Crime_In_US_By_State_2016.xlsx", range = "A1:K51") %>% 
   janitor::clean_names() 
 
+# Reading in Year 2015
+data_state_2015 = read_excel("data/Crime_In_US_By_State/Crime_In_US_By_State_2015.xlsx", range = "A1:K51") %>% 
+  janitor::clean_names() 
+
+# Reading in Year 2014
+data_state_2014 = read_excel("data/Crime_In_US_By_State/Crime_In_US_By_State_2014.xlsx", range = "A1:K51") %>% 
+  janitor::clean_names() 
+
+# Reading in Year 2013
+data_state_2013 = read_excel("data/Crime_In_US_By_State/Crime_In_US_By_State_2013.xlsx", range = "A1:K51") %>% 
+  janitor::clean_names()
+
+# Reading in Year 2012
+data_state_2012 = read_excel("data/Crime_In_US_By_State/Crime_In_US_By_State_2012.xlsx", range = "A1:K51") %>% 
+  janitor::clean_names()
+
+# Reading in Year 2011
+data_state_2011 = read_excel("data/Crime_In_US_By_State/Crime_In_US_By_State_2011.xlsx", range = "A1:K51") %>% 
+  janitor::clean_names()
+
+# Reading in Year 2010
+data_state_2010 = read_excel("data/Crime_In_US_By_State/Crime_In_US_By_State_2010.xlsx", range = "A1:K51") %>% 
+  janitor::clean_names()
+
+# Reading in Year 2009
+data_state_2009 = read_excel("data/Crime_In_US_By_State/Crime_In_US_By_State_2009.xlsx", range = "A1:K51") %>% 
+  janitor::clean_names()
+
+# Reading in Year 2008
+data_state_2008 = read_excel("data/Crime_In_US_By_State/Crime_In_US_By_State_2008.xlsx", range = "A1:K51") %>% 
+  janitor::clean_names()
+
+# Reading in Year 2007
+data_state_2007 = read_excel("data/Crime_In_US_By_State/Crime_In_US_By_State_2007.xlsx", range = "A1:K51") %>% 
+  janitor::clean_names()
+
+# Reading in Year 2006
+data_state_2006 = read_excel("data/Crime_In_US_By_State/Crime_In_US_By_State_2006.xlsx", range = "A1:K51") %>% 
+  janitor::clean_names()
+
+# Reading in Year 2005
+data_state_2005 = read_excel("data/Crime_In_US_By_State/Crime_In_US_By_State_2005.xlsx", range = "A1:K51") %>% 
+  janitor::clean_names()
+
+# Reading in Year 2004
+data_state_2004 = read_excel("data/Crime_In_US_By_State/Crime_In_US_By_State_2004.xlsx", range = "A1:K51") %>% 
+  janitor::clean_names()
+
+# Reading in Year 2003
+data_state_2003 = read_excel("data/Crime_In_US_By_State/Crime_In_US_By_State_2003.xlsx", range = "A1:K51") %>% 
+  janitor::clean_names()
+
+# Reading in Year 2002
+data_state_2002 = read_excel("data/Crime_In_US_By_State/Crime_In_US_By_State_2002.xlsx", range = "A1:K51") %>% 
+  janitor::clean_names()
+
+# Reading in Year 2001
+data_state_2001 = read_excel("data/Crime_In_US_By_State/Crime_In_US_By_State_2001.xlsx", range = "A1:K51") %>% 
+  janitor::clean_names()
+
+# Reading in Year 2000
+data_state_2000 = read_excel("data/Crime_In_US_By_State/Crime_In_US_By_State_2000.xlsx", range = "A1:K51") %>% 
+  janitor::clean_names()
+
+# Reading in Year 1999
+data_state_1999 = read_excel("data/Crime_In_US_By_State/Crime_In_US_By_State_1999.xlsx", range = "A1:K51") %>% 
+  janitor::clean_names()
+
 
 
 # Combing different years
 data_state = bind_rows(
   data_state_2018,
   data_state_2017,
-  data_state_2016)
+  data_state_2016,
+  data_state_2015,
+  data_state_2014,
+  data_state_2013,
+  data_state_2012,
+  data_state_2011,
+  data_state_2010,
+  data_state_2009,
+  data_state_2008,
+  data_state_2007,
+  data_state_2006,
+  data_state_2005,
+  data_state_2004,
+  data_state_2003,
+  data_state_2002,
+  data_state_2001,
+  data_state_2000,
+  data_state_1999)
 ```
 
 ``` r

@@ -67,7 +67,7 @@ renderPlotly({
   geo = list(
       scope = "usa",
       projection = list(type = "state"),
-      showlakes = TRUE,
+      showlakes = FALSE,
       lakecolor = toRGB("white"))
   
   altered_input_crime_form_state = str_replace_all(input$crime_form_state, " ", "_")
