@@ -149,6 +149,65 @@ data_state = data_state %>%
 ```
 
 
+# Crime In US By Region
+
+```{r Data_Input_Crime_In_US_By_Region}
+data_region_info = read_excel("data/Crime_In_US_By_Region/Region_State.xlsx",
+                              range = "A1:C103") %>% 
+  janitor::clean_names()
+
+# Reading in Year 2018
+data_region_2018 = read_excel("data/Crime_In_US_By_Region/Crime_In_US_By_Region_2018.xlsx", range = "A1:Q14") %>% 
+  janitor::clean_names() 
+
+# Reading in Year 2017
+data_region_2017 = read_excel("data/Crime_In_US_By_Region/Crime_In_US_By_Region_2017.xlsx", range = "A1:Q14") %>% 
+  janitor::clean_names() 
+
+# Reading in Year 2016
+data_region_2016 = read_excel("data/Crime_In_US_By_Region/Crime_In_US_By_Region_2016.xlsx", range = "A1:Q14") %>% 
+  janitor::clean_names() 
+
+
+
+# Combing different years
+data_region = bind_rows(
+  data_region_2018,
+  data_region_2017,
+  data_region_2016)
+```
+
+```{r Data_Prep_Crime_In_US_By_Region}
+data_region = data_region %>% 
+  select(
+    -murder_and_nonnegligent_manslaughter,
+    -rape,
+    -robbery,
+    -burglary,
+    -aggravated_assault,
+    -larceny_theft,
+    -motor_vehicle_theft,
+    -population)
+  
+  
+# Long-Format for the Data 
+data_region = pivot_longer(
+  data_region,
+  murder_and_nonnegligent_manslaughter_rate_per_100_000:motor_vehicle_theft_rate_per_100_000,
+  names_to = "variable_name",
+  values_to = "statistic")
+
+# Including Region-State info
+data_region = left_join(data_region_info, data_region, by = "region")
+
+```
+
+
+
+
+
+
 ```{r Saving_Data}
-save(data_state, file = "./data/Crime_In_US_By_State//data_state_time.RData")
+save(data_state, file = "./data/Crime_In_US_By_State/data_state.RData")
+save(data_region, file = "./data/Crime_In_US_By_Region/data_region.RData")
 ```

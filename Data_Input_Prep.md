@@ -7,14 +7,14 @@ Daniela Quigee (dq2147)
 library(tidyverse)
 ```
 
-    ## ── Attaching packages ────────────────────────────── tidyverse 1.3.0 ──
+    ## ── Attaching packages ───────────────────────────────────────── tidyverse 1.3.0 ──
 
     ## ✓ ggplot2 3.3.2     ✓ purrr   0.3.4
     ## ✓ tibble  3.0.1     ✓ dplyr   1.0.0
     ## ✓ tidyr   1.1.0     ✓ stringr 1.4.0
     ## ✓ readr   1.3.1     ✓ forcats 0.5.0
 
-    ## ── Conflicts ───────────────────────────────── tidyverse_conflicts() ──
+    ## ── Conflicts ──────────────────────────────────────────── tidyverse_conflicts() ──
     ## x dplyr::filter() masks stats::filter()
     ## x dplyr::lag()    masks stats::lag()
 
@@ -178,6 +178,59 @@ data_state = data_state %>%
     values_to = "statistic")
 ```
 
+# Crime In US By Region
+
 ``` r
-save(data_state, file = "./data/Crime_In_US_By_State//data_state_time.RData")
+data_region_info = read_excel("data/Crime_In_US_By_Region/Region_State.xlsx",
+                              range = "A1:C103") %>% 
+  janitor::clean_names()
+
+# Reading in Year 2018
+data_region_2018 = read_excel("data/Crime_In_US_By_Region/Crime_In_US_By_Region_2018.xlsx", range = "A1:Q14") %>% 
+  janitor::clean_names() 
+
+# Reading in Year 2017
+data_region_2017 = read_excel("data/Crime_In_US_By_Region/Crime_In_US_By_Region_2017.xlsx", range = "A1:Q14") %>% 
+  janitor::clean_names() 
+
+# Reading in Year 2016
+data_region_2016 = read_excel("data/Crime_In_US_By_Region/Crime_In_US_By_Region_2016.xlsx", range = "A1:Q14") %>% 
+  janitor::clean_names() 
+
+
+
+# Combing different years
+data_region = bind_rows(
+  data_region_2018,
+  data_region_2017,
+  data_region_2016)
+```
+
+``` r
+data_region = data_region %>% 
+  select(
+    -murder_and_nonnegligent_manslaughter,
+    -rape,
+    -robbery,
+    -burglary,
+    -aggravated_assault,
+    -larceny_theft,
+    -motor_vehicle_theft,
+    -population)
+  
+  
+# Long-Format for the Data 
+data_region = pivot_longer(
+  data_region,
+  murder_and_nonnegligent_manslaughter_rate_per_100_000:motor_vehicle_theft_rate_per_100_000,
+  names_to = "variable_name",
+  values_to = "statistic")
+
+# Including Region-State info
+data_region = left_join(data_region_info, data_region, by = "region")
+```
+
+``` r
+save(data_state, file = "./data/Crime_In_US_By_State/data_state.RData")
+save(data_region, file = "./data/Crime_In_US_By_Region/data_region.RData")
 ```
