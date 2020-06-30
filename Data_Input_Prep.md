@@ -7,14 +7,14 @@ Daniela Quigee (dq2147)
 library(tidyverse)
 ```
 
-    ## ── Attaching packages ──────────────────────────────────────────────────────────────────── tidyverse 1.3.0 ──
+    ## ── Attaching packages ───────────────────────────────────────────────────────────────── tidyverse 1.3.0 ──
 
     ## ✓ ggplot2 3.3.2     ✓ purrr   0.3.4
     ## ✓ tibble  3.0.1     ✓ dplyr   1.0.0
     ## ✓ tidyr   1.1.0     ✓ stringr 1.4.0
     ## ✓ readr   1.3.1     ✓ forcats 0.5.0
 
-    ## ── Conflicts ─────────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
+    ## ── Conflicts ──────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
     ## x dplyr::filter() masks stats::filter()
     ## x dplyr::lag()    masks stats::lag()
 
@@ -380,8 +380,160 @@ data_clearance_region = pivot_longer(
 data_clearance_region = left_join(data_region_info, data_clearance_region, by = "region")
 ```
 
+# Murder Weapons Distribution By State
+
+``` r
+########## Murder - Weapon - 2018 #####################
+data_murder_weapon_2018 = read_excel("data/Murder_Weapons_By_State/Murder_Weapons_By_State_2018.xlsx", range = "A1:J52") %>% janitor::clean_names()
+
+murder_2018_total = data_state_2018 %>% 
+  select(state, state_code, murder_and_nonnegligent_manslaughter)
+
+data_murder_weapon_2018 = left_join(
+  data_murder_weapon_2018, 
+  murder_2018_total,
+  by = "state")
+
+data_murder_weapon_2018 = data_murder_weapon_2018 %>% 
+  mutate(
+    no_info_on_weapon = murder_and_nonnegligent_manslaughter - total_number_of_murders_with_weapon_info) %>% 
+  select(state, state_code, year, total_number_of_murder = murder_and_nonnegligent_manslaughter, total_number_of_murders_with_weapon_info, no_info_on_weapon, everything())
+
+
+########## Murder - Weapon - 2017 #####################
+data_murder_weapon_2017 = read_excel("data/Murder_Weapons_By_State/Murder_Weapons_By_State_2017.xlsx", range = "A1:J52") %>% janitor::clean_names()
+
+murder_2017_total = data_state_2017 %>% 
+  select(state, state_code, murder_and_nonnegligent_manslaughter)
+
+data_murder_weapon_2017 = left_join(
+  data_murder_weapon_2017, 
+  murder_2017_total,
+  by = "state")
+
+data_murder_weapon_2017 = data_murder_weapon_2017 %>% 
+  mutate(
+    no_info_on_weapon = murder_and_nonnegligent_manslaughter - total_number_of_murders_with_weapon_info) %>% 
+  select(state, state_code, year, total_number_of_murder = murder_and_nonnegligent_manslaughter, total_number_of_murders_with_weapon_info, no_info_on_weapon, everything())
+
+
+########## Murder - Weapon - 2016 #####################
+data_murder_weapon_2016 = read_excel("data/Murder_Weapons_By_State/Murder_Weapons_By_State_2016.xlsx", range = "A1:J52") %>% janitor::clean_names()
+
+murder_2016_total = data_state_2016 %>% 
+  select(state, state_code, murder_and_nonnegligent_manslaughter)
+
+data_murder_weapon_2016 = left_join(
+  data_murder_weapon_2016, 
+  murder_2016_total,
+  by = "state")
+
+data_murder_weapon_2016 = data_murder_weapon_2016 %>% 
+  mutate(
+    no_info_on_weapon = murder_and_nonnegligent_manslaughter - total_number_of_murders_with_weapon_info) %>% 
+  select(state, state_code, year, total_number_of_murder = murder_and_nonnegligent_manslaughter, total_number_of_murders_with_weapon_info, no_info_on_weapon, everything())
+
+
+########## Murder - Weapon - 2015 #####################
+data_murder_weapon_2015 = read_excel("data/Murder_Weapons_By_State/Murder_Weapons_By_State_2015.xlsx", range = "A1:J52") %>% janitor::clean_names()
+
+murder_2015_total = data_state_2015 %>% 
+  select(state, state_code, murder_and_nonnegligent_manslaughter)
+
+data_murder_weapon_2015 = left_join(
+  data_murder_weapon_2015, 
+  murder_2015_total,
+  by = "state")
+
+data_murder_weapon_2015 = data_murder_weapon_2015 %>% 
+  mutate(
+    no_info_on_weapon = murder_and_nonnegligent_manslaughter - total_number_of_murders_with_weapon_info) %>% 
+  select(state, state_code, year, total_number_of_murder = murder_and_nonnegligent_manslaughter, total_number_of_murders_with_weapon_info, no_info_on_weapon, everything())
+
+
+########## Murder - Weapon - 2014 #####################
+data_murder_weapon_2014 = read_excel("data/Murder_Weapons_By_State/Murder_Weapons_By_State_2014.xlsx", range = "A1:J52") %>% janitor::clean_names()
+
+murder_2014_total = data_state_2014 %>% 
+  select(state, state_code, murder_and_nonnegligent_manslaughter)
+
+data_murder_weapon_2014 = left_join(
+  data_murder_weapon_2014, 
+  murder_2014_total,
+  by = "state")
+
+data_murder_weapon_2014 = data_murder_weapon_2014 %>% 
+  mutate(
+    no_info_on_weapon = murder_and_nonnegligent_manslaughter - total_number_of_murders_with_weapon_info) %>% 
+  select(state, state_code, year, total_number_of_murder = murder_and_nonnegligent_manslaughter, total_number_of_murders_with_weapon_info, no_info_on_weapon, everything())
+
+
+########## Murder - Weapon - 2013 #####################
+data_murder_weapon_2013 = read_excel("data/Murder_Weapons_By_State/Murder_Weapons_By_State_2013.xlsx", range = "A1:J52") %>% janitor::clean_names()
+
+murder_2013_total = data_state_2013 %>% 
+  select(state, state_code, murder_and_nonnegligent_manslaughter)
+
+data_murder_weapon_2013 = left_join(
+  data_murder_weapon_2013, 
+  murder_2013_total,
+  by = "state")
+
+data_murder_weapon_2013 = data_murder_weapon_2013 %>% 
+  mutate(
+    no_info_on_weapon = murder_and_nonnegligent_manslaughter - total_number_of_murders_with_weapon_info) %>% 
+  select(state, state_code, year, total_number_of_murder = murder_and_nonnegligent_manslaughter, total_number_of_murders_with_weapon_info, no_info_on_weapon, everything())
+
+
+########## Murder - Weapon - 2012 #####################
+data_murder_weapon_2012 = read_excel("data/Murder_Weapons_By_State/Murder_Weapons_By_State_2012.xlsx", range = "A1:J52") %>% janitor::clean_names()
+
+murder_2012_total = data_state_2012 %>% 
+  select(state, state_code, murder_and_nonnegligent_manslaughter)
+
+data_murder_weapon_2012 = left_join(
+  data_murder_weapon_2012, 
+  murder_2012_total,
+  by = "state")
+
+data_murder_weapon_2012 = data_murder_weapon_2012 %>% 
+  mutate(
+    no_info_on_weapon = murder_and_nonnegligent_manslaughter - total_number_of_murders_with_weapon_info) %>% 
+  select(state, state_code, year, total_number_of_murder = murder_and_nonnegligent_manslaughter, total_number_of_murders_with_weapon_info, no_info_on_weapon, everything())
+
+########## Murder - Weapon - 2011 #####################
+data_murder_weapon_2011 = read_excel("data/Murder_Weapons_By_State/Murder_Weapons_By_State_2011.xlsx", range = "A1:J52") %>% janitor::clean_names()
+
+murder_2011_total = data_state_2011 %>% 
+  select(state, state_code, murder_and_nonnegligent_manslaughter)
+
+data_murder_weapon_2011 = left_join(
+  data_murder_weapon_2011, 
+  murder_2011_total,
+  by = "state")
+
+data_murder_weapon_2011 = data_murder_weapon_2011 %>% 
+  mutate(
+    no_info_on_weapon = murder_and_nonnegligent_manslaughter - total_number_of_murders_with_weapon_info) %>% 
+  select(state, state_code, year, total_number_of_murder = murder_and_nonnegligent_manslaughter, total_number_of_murders_with_weapon_info, no_info_on_weapon, everything())
+
+
+# Combing different years
+
+data_murder_weapon = bind_rows(
+  data_murder_weapon_2018,
+  data_murder_weapon_2017,
+  data_murder_weapon_2016,
+  data_murder_weapon_2015,
+  data_murder_weapon_2014,
+  data_murder_weapon_2013,
+  data_murder_weapon_2012,
+  data_murder_weapon_2011) 
+```
+
 ``` r
 save(data_state, file = "./data/Crime_In_US_By_State/data_state.RData")
 save(data_region, file = "./data/Crime_In_US_By_Region/data_region.RData")
 save(data_clearance_region, file = "./data/Clearance_Rates_By_Region/data_clearance_region.RData")
+save(data_murder_weapon, file = "./data/Murder_Weapons_By_State/data_murder_weapon.RData")
 ```
