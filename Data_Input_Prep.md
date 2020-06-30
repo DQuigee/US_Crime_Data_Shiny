@@ -7,14 +7,14 @@ Daniela Quigee (dq2147)
 library(tidyverse)
 ```
 
-    ## ── Attaching packages ────────────────────────────────────────── tidyverse 1.3.0 ──
+    ## ── Attaching packages ──────────────────────────────────────────────────────────────────── tidyverse 1.3.0 ──
 
     ## ✓ ggplot2 3.3.2     ✓ purrr   0.3.4
     ## ✓ tibble  3.0.1     ✓ dplyr   1.0.0
     ## ✓ tidyr   1.1.0     ✓ stringr 1.4.0
     ## ✓ readr   1.3.1     ✓ forcats 0.5.0
 
-    ## ── Conflicts ───────────────────────────────────────────── tidyverse_conflicts() ──
+    ## ── Conflicts ─────────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
     ## x dplyr::filter() masks stats::filter()
     ## x dplyr::lag()    masks stats::lag()
 
@@ -300,12 +300,72 @@ data_2018_clearance = read_excel("data/Clearance_Rates_By_Region/Clearance_Rates
 data_2017_clearance = read_excel("data/Clearance_Rates_By_Region/Clearance_Rates_By_Region_2017.xlsx", range = "A1:I14") %>% 
   janitor::clean_names()
 
+# Reading in Year 2015
+data_2015_clearance = read_excel("data/Clearance_Rates_By_Region/Clearance_Rates_By_Region_2015.xlsx", range = "A1:I14") %>% 
+  janitor::clean_names()
+
+# Reading in Year 2014
+data_2014_clearance = read_excel("data/Clearance_Rates_By_Region/Clearance_Rates_By_Region_2014.xlsx", range = "A1:I14") %>% 
+  janitor::clean_names()
+
+# Reading in Year 2013
+data_2013_clearance = read_excel("data/Clearance_Rates_By_Region/Clearance_Rates_By_Region_2013.xlsx", range = "A1:I14") %>% 
+  janitor::clean_names()
+
+# Reading in Year 2012
+data_2012_clearance = read_excel("data/Clearance_Rates_By_Region/Clearance_Rates_By_Region_2012.xlsx", range = "A1:I14") %>% 
+  janitor::clean_names()
+
+# Reading in Year 2011
+data_2011_clearance = read_excel("data/Clearance_Rates_By_Region/Clearance_Rates_By_Region_2011.xlsx", range = "A1:I14") %>% 
+  janitor::clean_names()
+
+# Reading in Year 2010
+data_2010_clearance = read_excel("data/Clearance_Rates_By_Region/Clearance_Rates_By_Region_2010.xlsx", range = "A1:I14") %>% 
+  janitor::clean_names()
+
+# Reading in Year 2009
+data_2009_clearance = read_excel("data/Clearance_Rates_By_Region/Clearance_Rates_By_Region_2009.xlsx", range = "A1:I14") %>% 
+  janitor::clean_names()
+
+# Reading in Year 2008
+data_2008_clearance = read_excel("data/Clearance_Rates_By_Region/Clearance_Rates_By_Region_2008.xlsx", range = "A1:I14") %>% 
+  janitor::clean_names()
+
+# Reading in Year 2007
+data_2007_clearance = read_excel("data/Clearance_Rates_By_Region/Clearance_Rates_By_Region_2007.xlsx", range = "A1:I14") %>% 
+  janitor::clean_names()
+
+# Reading in Year 2006
+data_2006_clearance = read_excel("data/Clearance_Rates_By_Region/Clearance_Rates_By_Region_2006.xlsx", range = "A1:I14") %>% 
+  janitor::clean_names()
+
+# Reading in Year 2005
+data_2005_clearance = read_excel("data/Clearance_Rates_By_Region/Clearance_Rates_By_Region_2005.xlsx", range = "A1:I14") %>% 
+  janitor::clean_names()
+
+# Reading in Year 2004
+data_2004_clearance = read_excel("data/Clearance_Rates_By_Region/Clearance_Rates_By_Region_2004.xlsx", range = "A1:I14") %>% 
+  janitor::clean_names()
+
 
 
 # Combing different years
 data_clearance_region = bind_rows(
   data_2018_clearance,
-  data_2017_clearance)
+  data_2017_clearance,
+  data_2015_clearance,
+  data_2014_clearance,
+  data_2013_clearance,
+  data_2012_clearance,
+  data_2011_clearance,
+  data_2010_clearance,
+  data_2009_clearance,
+  data_2008_clearance,
+  data_2007_clearance,
+  data_2006_clearance,
+  data_2005_clearance,
+  data_2004_clearance)
 ```
 
 ``` r
