@@ -28,6 +28,8 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE)
 load(file = "./data/Crime_In_US_By_State/data_state.RData")
 load(file = "./data/Crime_In_US_By_Region/data_region.RData")
 load(file = "./data/Clearance_Rates_By_Region/data_clearance_region.RData")
+load(file = "./data/Murder_Weapons_By_State/data_murder_weapon.RData")
+
 
 
 # Regions / Divisions of the USA
@@ -672,8 +674,28 @@ Column {.sidebar data-width=310}
 -----------------------------------------------------------------------
 
 ```{r Sidebar_Murder_Weapon}
+order_states_by = c(
+  "no info on weapon",
+  "handguns",
+  "rifles",
+  "shotguns",
+  "firearms type unknown",
+  "knives or cutting instruments",
+  "other weapons",
+  "hands, fists, feet, etc.")
+  
+selectInput(
+  "order_states_by_weapon", 
+  label = h3("Order States By"),
+  choices = as.list(order_states_by))
 
-
+sliderInput("year_murder_weapon", 
+            label = "Choose Year", 
+            min = 2011, 
+            max = 2018, 
+            value = 2018, 
+            step = 1,
+            sep = "")
 ```
 
 
@@ -682,11 +704,143 @@ Column {.sidebar data-width=310}
 Column {data-width=800, .tabset}
 -------------------------------------
     
-### Murder Weapon Distribution
+### Distribution of Murder Weapons within each US State
     
 ```{r Murder_Weapon_Plot}
-
-
+renderPlotly({
+  
+  tmp_murder_weapon = data_murder_weapon %>% 
+    filter(year == input$year_murder_weapon) %>% 
+    mutate(
+      no_info_on_weapon = round((no_info_on_weapon/total_number_of_murder)*100, digits = 2),
+      handguns = round((handguns/total_number_of_murder)*100, digits = 2),
+      rifles = round((rifles/total_number_of_murder)*100, digits = 2),
+      shotguns = round((shotguns/total_number_of_murder)*100, digits = 2),
+      firearms_type_unknown = round((firearms_type_unknown/total_number_of_murder)*100, digits = 2),
+      knives_or_cutting_instruments = round((knives_or_cutting_instruments/total_number_of_murder)*100, digits = 2),
+      other_weapons = round((other_weapons/total_number_of_murder)*100, digits = 2),
+      hands_fists_feet_etc = round((hands_fists_feet_etc/total_number_of_murder)*100, digits = 2))
+  
+  if (input$order_states_by_weapon == "no info on weapon") {
+    tmp_murder_weapon = tmp_murder_weapon %>% 
+      mutate(
+        state = factor(
+          state, 
+          levels = unique(state)[order(no_info_on_weapon)]))
+      } else if (input$order_states_by_weapon == "handguns") {
+        tmp_murder_weapon = tmp_murder_weapon %>% 
+          mutate(
+            state = factor(
+              state, 
+              levels = unique(state)[order(handguns)]))
+      } else if (input$order_states_by_weapon == "rifles") {
+        tmp_murder_weapon = tmp_murder_weapon %>% 
+          mutate(
+            state = factor(
+              state, 
+              levels = unique(state)[order(rifles)]))
+      } else if (input$order_states_by_weapon == "shotguns") {
+        tmp_murder_weapon = tmp_murder_weapon %>% 
+          mutate(
+            state = factor(
+              state, 
+              levels = unique(state)[order(shotguns)]))
+      } else if (input$order_states_by_weapon == "firearms type unknown") {
+        tmp_murder_weapon = tmp_murder_weapon %>% 
+          mutate(
+            state = factor(
+              state, 
+              levels = unique(state)[order(firearms_type_unknown)]))
+      } else if (input$order_states_by_weapon == "knives or cutting instruments") {
+        tmp_murder_weapon = tmp_murder_weapon %>% 
+          mutate(
+            state = factor(
+              state, 
+              levels = unique(state)[order(knives_or_cutting_instruments)]))
+      } else if (input$order_states_by_weapon == "other weapons") {
+        tmp_murder_weapon = tmp_murder_weapon %>% 
+          mutate(
+            state = factor(
+              state, 
+              levels = unique(state)[order(other_weapons)]))
+      } else  {
+        tmp_murder_weapon = tmp_murder_weapon %>% 
+          mutate(
+            state = factor(
+              state, 
+              levels = unique(state)[order(hands_fists_feet_etc)]))
+      }
+  
+  tmp_murder_weapon %>% 
+    plot_ly(
+      y = ~state,
+      x = ~handguns,
+      type = "bar",
+      name = "handgun",
+      text = "handgun",
+      hovertemplate = "%{y}\n%{text}: %{x}%<extra></extra>",
+      marker = list(
+        color = "#3a7ca5",
+        line = list(color = 'rgb(248, 248, 249)', width = 1.5))) %>% 
+    add_trace(
+      x = ~rifles,
+      marker = list(color = "#63c5da"),
+      name = "rifle",
+      text = "rifle",
+      hovertemplate = "%{y}\n%{text}: %{x}%<extra></extra>") %>% 
+    add_trace(
+      x = ~shotguns,
+      marker = list(color = "#bc544b"),
+      name = "shotgun",
+      text = "shotgun",
+      hovertemplate = "%{y}\n%{text}: %{x}%<extra></extra>") %>% 
+    add_trace(
+      x = ~firearms_type_unknown,
+      marker = list(color = "#fe7d6a"),
+      name = "firearm (type unknown)",
+      text = "firearm (type unknown)",
+      hovertemplate = "%{y}\n%{text}: %{x}%<extra></extra>") %>% 
+    add_trace(
+      x = ~knives_or_cutting_instruments,
+      marker = list(color = "9E7bb5"),
+      name = "knife / cutting_instrument",
+      text = "knife / cutting_instrument",
+      hovertemplate = "%{y}\n%{text}: %{x}%<extra></extra>") %>% 
+    add_trace(
+      x = ~other_weapons,
+      marker = list(color = "#98bf64"),
+      name = "other weapon",
+      text = "other weapon",
+      hovertemplate = "%{y}\n%{text}: %{x}%<extra></extra>") %>% 
+    add_trace(
+      x = ~hands_fists_feet_etc,
+      marker = list(color = "#e7c27d"),
+      name = "hands fists feet etc",
+      text = "hands fists feet etc",
+      hovertemplate = "%{y}\n%{text}: %{x}%<extra></extra>") %>% 
+    add_trace(
+      x = ~no_info_on_weapon,
+      marker = list(color = "#cococo"),
+      name = "no info on weapon",
+      text = "no info on weapon",
+      hovertemplate = "%{y}\n%{text}: %{x}%<extra></extra>") %>% 
+    layout(
+      margin = list(l = 0.5, r = 0.5, t = 0.5, b = 0.5),
+      barmode = 'stack',
+      #title = "<b>Distribution of Murder Weapons within each US State</b>",
+      xaxis = list(
+        ticktext = list("0%", "5%", "10%", "15%", "20%", 
+                        "25%", "30%", "35%", "40%", "45%", "50%", 
+                        "55%", "60%", "65%", "70%", "75%",
+                        "80%", "85%", "90%", "95%", "100%"),
+        tickvals = list(0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100),
+        tickmode = "array",
+        tickfont = list(size = 11),
+        title = ''), 
+      yaxis = list(
+        title = '',
+        tickfont = list(size = 9)))
+})
 ```
  
  
