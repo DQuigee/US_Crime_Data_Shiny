@@ -14,9 +14,9 @@ library(rgeos)
 ```
 
 
-# Crime In US By State
+# Crime Rates In US By State
 
-```{r Data_Input_Crime_In_US_By_State}
+```{r Data_Input_Crime_Rates_In_US_By_State}
 # Reading in Year 2018
 data_state_2018 = read_excel("data/Crime_In_US_By_State/Crime_In_US_By_State_2018.xlsx", range = "A1:K51") %>% 
   janitor::clean_names() 
@@ -123,7 +123,7 @@ data_state = bind_rows(
   data_state_1999)
 ```
 
-```{r Data_Prep_Crime_In_US_By_State}
+```{r Data_Prep_Crime_Rates_In_US_By_State}
 data_state = data_state %>% 
   mutate(
     murder_and_nonnegligent_manslaughter_rate_per_100_000 = round(murder_and_nonnegligent_manslaughter/(population/100000), digits = 2),
@@ -149,11 +149,11 @@ data_state = data_state %>%
 ```
 
 
-# Crime In US By Region
+# Crime Rates In US By Region
 
-```{r Data_Input_Crime_In_US_By_Region}
+```{r Data_Input_Crime_Rates_In_US_By_Region}
 data_region_info = read_excel("data/Crime_In_US_By_Region/Region_State.xlsx",
-                              range = "A1:C103") %>% 
+                              range = "A1:C101") %>% 
   janitor::clean_names()
 
 # Reading in Year 2018
@@ -236,7 +236,7 @@ data_region = bind_rows(
   data_region_2004)
 ```
 
-```{r Data_Prep_Crime_In_US_By_Region}
+```{r Data_Prep_Crime_Rates_In_US_By_Region}
 data_region = data_region %>% 
   select(
     -murder_and_nonnegligent_manslaughter,
@@ -258,10 +258,41 @@ data_region = pivot_longer(
 
 # Including Region-State info
 data_region = left_join(data_region_info, data_region, by = "region")
-
 ```
 
 
+
+
+# Clearance Rates In US By Region
+
+```{r Data_Input_Clearance_Rates_In_US_By_Region}
+# Reading in Year 2018
+data_2018_clearance = read_excel("data/Clearance_Rates_By_Region/Clearance_Rates_By_Region_2018.xlsx", range = "A1:I14") %>% 
+  janitor::clean_names()
+
+# Reading in Year 2017
+data_2017_clearance = read_excel("data/Clearance_Rates_By_Region/Clearance_Rates_By_Region_2017.xlsx", range = "A1:I14") %>% 
+  janitor::clean_names()
+
+
+
+# Combing different years
+data_clearance_region = bind_rows(
+  data_2018_clearance,
+  data_2017_clearance)
+```
+
+```{r Data_Prep_Clearance_Rates_In_US_By_Region}
+# Long-Format for the Data 
+data_clearance_region = pivot_longer(
+  data_clearance_region,
+  murder_and_nonnegligent_manslaugther_percent_cleared_by_arrest:motor_vehicle_theft_percent_cleared_by_arrest,
+  names_to = "variable_name",
+  values_to = "percent_cleared_by_arrest")
+
+# Including Region-State info
+data_clearance_region = left_join(data_region_info, data_clearance_region, by = "region")
+```
 
 
 
@@ -269,4 +300,5 @@ data_region = left_join(data_region_info, data_region, by = "region")
 ```{r Saving_Data}
 save(data_state, file = "./data/Crime_In_US_By_State/data_state.RData")
 save(data_region, file = "./data/Crime_In_US_By_Region/data_region.RData")
+save(data_clearance_region, file = "./data/Clearance_Rates_By_Region/data_clearance_region.RData")
 ```

@@ -7,14 +7,14 @@ Daniela Quigee (dq2147)
 library(tidyverse)
 ```
 
-    ## ── Attaching packages ───────────────────────────────── tidyverse 1.3.0 ──
+    ## ── Attaching packages ────────────────────────────────────────── tidyverse 1.3.0 ──
 
     ## ✓ ggplot2 3.3.2     ✓ purrr   0.3.4
     ## ✓ tibble  3.0.1     ✓ dplyr   1.0.0
     ## ✓ tidyr   1.1.0     ✓ stringr 1.4.0
     ## ✓ readr   1.3.1     ✓ forcats 0.5.0
 
-    ## ── Conflicts ──────────────────────────────────── tidyverse_conflicts() ──
+    ## ── Conflicts ───────────────────────────────────────────── tidyverse_conflicts() ──
     ## x dplyr::filter() masks stats::filter()
     ## x dplyr::lag()    masks stats::lag()
 
@@ -44,7 +44,7 @@ library(rgeos)
     ##  Linking to sp version: 1.4-1 
     ##  Polygon checking: TRUE
 
-# Crime In US By State
+# Crime Rates In US By State
 
 ``` r
 # Reading in Year 2018
@@ -178,11 +178,11 @@ data_state = data_state %>%
     values_to = "statistic")
 ```
 
-# Crime In US By Region
+# Crime Rates In US By Region
 
 ``` r
 data_region_info = read_excel("data/Crime_In_US_By_Region/Region_State.xlsx",
-                              range = "A1:C103") %>% 
+                              range = "A1:C101") %>% 
   janitor::clean_names()
 
 # Reading in Year 2018
@@ -289,7 +289,39 @@ data_region = pivot_longer(
 data_region = left_join(data_region_info, data_region, by = "region")
 ```
 
+# Clearance Rates In US By Region
+
+``` r
+# Reading in Year 2018
+data_2018_clearance = read_excel("data/Clearance_Rates_By_Region/Clearance_Rates_By_Region_2018.xlsx", range = "A1:I14") %>% 
+  janitor::clean_names()
+
+# Reading in Year 2017
+data_2017_clearance = read_excel("data/Clearance_Rates_By_Region/Clearance_Rates_By_Region_2017.xlsx", range = "A1:I14") %>% 
+  janitor::clean_names()
+
+
+
+# Combing different years
+data_clearance_region = bind_rows(
+  data_2018_clearance,
+  data_2017_clearance)
+```
+
+``` r
+# Long-Format for the Data 
+data_clearance_region = pivot_longer(
+  data_clearance_region,
+  murder_and_nonnegligent_manslaugther_percent_cleared_by_arrest:motor_vehicle_theft_percent_cleared_by_arrest,
+  names_to = "variable_name",
+  values_to = "percent_cleared_by_arrest")
+
+# Including Region-State info
+data_clearance_region = left_join(data_region_info, data_clearance_region, by = "region")
+```
+
 ``` r
 save(data_state, file = "./data/Crime_In_US_By_State/data_state.RData")
 save(data_region, file = "./data/Crime_In_US_By_Region/data_region.RData")
+save(data_clearance_region, file = "./data/Clearance_Rates_By_Region/data_clearance_region.RData")
 ```
