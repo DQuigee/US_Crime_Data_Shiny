@@ -571,8 +571,60 @@ renderPlotly({
 ### Time Plot
 
 ```{r Time_plot_Region_Clearance}
- 
- 
+renderPlotly({
+  
+  altered_input_crime_form_clearance = str_replace_all(input$crime_form_region_clearance, " ", "_")
+  altered_input_crime_form_clearance = str_replace_all(altered_input_crime_form_clearance, "-", "_")
+  
+  if (input$region_type_clearance == regions) {
+    data_clearance_region_plot = data_clearance_region %>% 
+      filter(region == "Northeast" | region == "Midwest" | region == "South" | region == "West")
+  }
+  else { 
+    data_clearance_region_plot = data_clearance_region %>% 
+      filter(region != "Northeast" & region != "Midwest" & region != "South" & region != "West")
+  }
+   
+  max_percent_cleared = data_clearance_region_plot %>%
+    select(-state, -state_code) %>%
+    filter(variable_name == paste(altered_input_crime_form_clearance, "_percent_cleared_by_arrest", sep = "")) %>% 
+    distinct() %>% 
+    pull(percent_cleared_by_arrest) %>% 
+    max()
+  
+  max_percent_cleared = min(max_percent_cleared + 10, 100)/100
+  
+  data_clearance_region_plot %>%
+    mutate(percent_cleared_by_arrest = percent_cleared_by_arrest / 100) %>% 
+    select(-state, -state_code) %>%
+    filter(variable_name == paste(altered_input_crime_form_clearance, "_percent_cleared_by_arrest", sep = "")) %>% 
+    distinct() %>%
+    group_by(region) %>% 
+      plot_ly(
+        x = ~year, 
+        y = ~percent_cleared_by_arrest, 
+        type = "scatter", 
+        mode = 'lines+markers',
+        alpha = 0.75,
+        color = ~as.factor(region),
+        text =  ~paste("Region: ", region, sep = ""),
+        hovertemplate = "%{text}\nYear: %{x}\nPercent cleared by arrest: %{y}<extra></extra>") %>%
+      layout(
+        xaxis = list(
+          title = "Year",
+          dtick = 2,
+          tick0 = 2004,
+          range = c(2003, 2019),
+          tickmode = "linear",
+          titlefont = list(size = 13),
+          tickfont = list(size = 11)),
+        yaxis = list(
+          tickformat = "%",
+          range = c(0, max_percent_cleared),
+          title = ~paste(input$crime_form_region_clearance, "\nPercent cleared by arrest\n" ,sep = " "),
+          titlefont = list(size = 13),
+          tickfont = list(size = 11)))
+})
 ```
 
 
