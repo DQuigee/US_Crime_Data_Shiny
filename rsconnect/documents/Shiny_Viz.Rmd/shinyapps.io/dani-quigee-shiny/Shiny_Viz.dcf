@@ -5,8 +5,8 @@ account: dani-quigee-shiny
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 2511832
-bundleId: 3331700
+bundleId: 3331759
 url: https://dani-quigee-shiny.shinyapps.io/Shiny_Viz/
-when: 1593476173.18311
+when: 1593477456.20774
 asMultiple: FALSE
 asStatic: FALSE

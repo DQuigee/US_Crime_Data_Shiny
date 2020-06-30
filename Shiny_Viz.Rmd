@@ -315,7 +315,7 @@ renderPlotly({
   }
   else { 
     data_region_plot = data_region %>% 
-      filter(region != "Northeast" | region != "Midwest" | region != "South" | region == "West")
+      filter(region != "Northeast" & region != "Midwest" & region != "South" & region != "West")
   }
   
 
@@ -379,8 +379,51 @@ renderPlotly({
 ### Time Plot
 
 ```{r Time_Plot_Region}
+renderPlotly({
+  
+  altered_input_crime_form_region = str_replace_all(input$crime_form_region, " ", "_")
+  altered_input_crime_form_region = str_replace_all(altered_input_crime_form_region, "-", "_")
 
+
+  if (input$region_type == regions) {
+    data_region_plot = data_region %>% 
+      filter(region == "Northeast" | region == "Midwest" | region == "South" | region == "West")
+  }
+  else { 
+    data_region_plot = data_region %>% 
+      filter(region != "Northeast" & region != "Midwest" & region != "South" & region != "West")
+  }
+  
+  data_region_plot %>%
+    select(-state, -state_code) %>%
+    filter(variable_name == paste(altered_input_crime_form_region, "_rate_per_100_000", sep = "")) %>% 
+    distinct() %>% 
+    group_by(region) %>% 
+    plot_ly(
+      x = ~year, 
+      y = ~statistic, 
+      type = "scatter", 
+      mode = 'lines+markers',
+      alpha = 0.75,
+      color = ~as.factor(region),
+      text =  ~paste("Region: ", region, sep = ""),
+      hovertemplate = "%{text}\nYear: %{x}\nStatistic: %{y}<extra></extra>") %>%
+    layout(
+      xaxis = list(
+        title = "Year",
+        dtick = 2,
+        tick0 = 1999,
+        range = c(1998, 2019),
+        tickmode = "linear",
+        titlefont = list(size = 13),
+        tickfont = list(size = 11)),
+      yaxis = list(
+        title = ~paste(input$crime_form_region, "\nrate per 100,000 people\n" ,sep = " "),
+        titlefont = list(size = 13),
+        tickfont = list(size = 11)))
+})
 ```
+
 
  
 ### Data Source
