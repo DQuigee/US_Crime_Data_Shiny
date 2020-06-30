@@ -27,6 +27,37 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE)
 # Loading Data
 load(file = "./data/Crime_In_US_By_State/data_state.RData")
 load(file = "./data/Crime_In_US_By_Region/data_region.RData")
+load(file = "./data/Clearance_Rates_By_Region/data_clearance_region.RData")
+
+
+# Regions / Divisions of the USA
+regions = c("Northeast", "Midwest", "South", "West")
+
+divisions = c("New England", "Middle Atlantic",
+              "East North Central", "West North Central",
+              "South Atlantic", "East South Central", "West South Central",
+              "Mountain", "Pacific")
+
+regions = paste(
+  regions[1], 
+  regions[2], 
+  regions[3], 
+  regions[4], 
+  sep = " - ")
+
+divisions = paste(
+  divisions[1],
+  divisions[2],
+  divisions[3],
+  divisions[4],
+  divisions[5],
+  divisions[6],
+  divisions[7],
+  divisions[8],
+  divisions[9],
+  sep = " - ")
+
+region_types = c(regions, divisions)
 ```
 
 
@@ -250,37 +281,8 @@ Column {.sidebar data-width=310}
 -----------------------------------------------------------------------
 
 ```{r Sidebar_Crime_Data_Region}
-regions = c("Northeast", "Midwest", "South", "West")
-
-divisions = c("New England", "Middle Atlantic",
-              "East North Central", "West North Central",
-              "South Atlantic", "East South Central", "West South Central",
-              "Mountain", "Pacific")
-
-regions = paste(
-  regions[1], 
-  regions[2], 
-  regions[3], 
-  regions[4], 
-  sep = " - ")
-
-divisions = paste(
-  divisions[1],
-  divisions[2],
-  divisions[3],
-  divisions[4],
-  divisions[5],
-  divisions[6],
-  divisions[7],
-  divisions[8],
-  divisions[9],
-  sep = " - ")
-
-region_types = c(regions, divisions)
-
-
 selectInput(
-  "region_type", 
+  "region_type_region", 
   label = h3("Choose between Regions and Divisions"),
   choices = as.list(region_types))
 
@@ -309,7 +311,7 @@ Column {.tabset}
 ```{r Map_Region}
 renderPlotly({
 
-  if (input$region_type == regions) {
+  if (input$region_type_region == regions) {
     data_region_plot = data_region %>% 
       filter(region == "Northeast" | region == "Midwest" | region == "South" | region == "West")
   }
@@ -468,7 +470,25 @@ Column {.sidebar data-width=310}
 -----------------------------------------------------------------------
 
 ```{r Sidebar_Clearance_Region}
+selectInput(
+  "region_type_clearance", 
+  label = h3("Choose between Regions and Divisions"),
+  choices = as.list(region_types))
 
+
+crime_formes_region_clearance = c(
+  "aggravated assault",
+  "burglary",
+  "larceny-theft",
+  "motor vehicle theft",
+  "murder and nonnegligent manslaugther",
+  "rape",
+  "robbery")
+  
+selectInput(
+  "crime_form_region_clearance", 
+  label = h3("Choose Type of Crime"),
+  choices = as.list(crime_formes_region_clearance))
 ```
 
 
@@ -479,8 +499,71 @@ Column {.tabset}
 ### Map
 
 ```{r Map_Region_Clearance}
+renderPlotly({
 
+  altered_input_crime_form_clearance = str_replace_all(input$crime_form_region_clearance, " ", "_")
+  altered_input_crime_form_clearance = str_replace_all(altered_input_crime_form_clearance, "-", "_")
+  
+  if (input$region_type_clearance == regions) {
+    data_clearance_region_plot = data_clearance_region %>% 
+      filter(region == "Northeast" | region == "Midwest" | region == "South" | region == "West")
+  }
+  else { 
+    data_clearance_region_plot = data_clearance_region %>% 
+      filter(region != "Northeast" & region != "Midwest" & region != "South" & region != "West")
+  }
+  
 
+  col = colorRampPalette(brewer.pal(9, "BuPu"))(200)
+  
+  geo = list(
+      scope = "usa",
+      projection = list(type = "state"),
+      showlakes = FALSE,
+      lakecolor = toRGB("white"))
+  
+  min_z = data_clearance_region_plot %>% 
+    filter(variable_name == paste(altered_input_crime_form_clearance, "_percent_cleared_by_arrest", sep = "")) %>% 
+    pull(percent_cleared_by_arrest) %>% 
+    min() %>% 
+    floor()
+  min_z = min_z
+  
+  max_z = data_clearance_region_plot %>% 
+    filter(variable_name == paste(altered_input_crime_form_clearance, "_percent_cleared_by_arrest", sep = "")) %>% 
+    pull(percent_cleared_by_arrest) %>% 
+    max() %>% 
+    ceiling()
+  max_z = max_z
+  
+    data_clearance_region_plot %>%
+      filter(variable_name == paste(altered_input_crime_form_clearance, "_percent_cleared_by_arrest", sep = "")) %>%
+      plot_geo(locationmode = "USA-states") %>%
+      add_trace(
+        z = ~percent_cleared_by_arrest,
+        zmin = min_z,
+        zmax = max_z,
+        locations = ~state_code,
+        color = ~percent_cleared_by_arrest,
+        colors = col,
+        frame = ~year,
+        text =  ~paste(paste("Region: ", region, sep = ""),"\n" ,paste("Year: ", year, sep = ""), sep = ""),
+        hovertemplate = "%{text}\nPercent cleared by arrest: %{z}<extra></extra>") %>%
+      layout(
+        geo = geo,
+        title = paste(
+          "<b>\n", 
+          input$crime_form_region_clearance, 
+          " - Percent cleared by arrest</b>", 
+          sep = ""), 
+        titlefont = list(size = 16)) %>%
+      animation_opts(
+        frame = 1200, 
+        transition = 10,
+        easing = "elastic", 
+        redraw = TRUE) %>% 
+      colorbar(title = "Percent cleared\nby arrest")
+})
 ```
 
 
