@@ -247,7 +247,7 @@ In particular, the data can be found on the following websites:
 
 <br>
 
-```{r}
+```{r Data_Source_Crime_Rates_By_State}
 renderTable({
   tibble(
     year = 2018:1999,
@@ -391,7 +391,7 @@ renderPlotly({
   altered_input_crime_form_region = str_replace_all(altered_input_crime_form_region, "-", "_")
 
 
-  if (input$region_type == regions) {
+  if (input$region_type_region == regions) {
     data_region_plot = data_region %>% 
       filter(region == "Northeast" | region == "Midwest" | region == "South" | region == "West")
   }
@@ -442,7 +442,7 @@ In particular, the data can be found on the following websites:
 
 <br>
  
-```{r}
+```{r Date_Source_Crime_Rates_By_Region}
 renderTable({
 tibble(
   year = 2018:2004,
@@ -643,7 +643,7 @@ In particular, the data can be found on the following websites:
 
 <br>
  
-```{r}
+```{r Data_Source_Clearance_Rates_By_Region}
 renderTable({
 tibble(
   year = as.integer(c(2018:2017, 2015:2004)),
@@ -856,7 +856,7 @@ In particular, the data can be found on the following websites:
 
 <br>
  
-```{r}
+```{r Data_Source_Murder_Weapon_By_State}
 renderTable({
 tibble(
   year = 2018:2011,
@@ -1000,5 +1000,33 @@ renderPlotly({
           titlefont = list(size = 13),
           tickfont = list(size = 11)))
 })
+```
 
+
+### Data Source
+
+<br>
+
+Population estimates for the boroughs of NYC from 2000 to 2019 were retrieved from the United States Census Bureau.
+
+Crime numbers for different precincts in NYC from 2000 to 2019 were retrieved from the NYPD.
+
+In particular, the data can be found on the following websites:
+
+<br>
+ 
+```{r Data_Source_Crime_Rates_NYC_By_Borough}
+renderTable({
+tibble(
+  type = c(
+    "Population estimates for NYC's boroughs from 2000 to 2009", 
+    "Population estimates for NYC's boroughs from 2010 to 2019",
+    "Crime statistics for NYC by precinct",
+    "Precincts in NYC by borough"),
+  source = c(
+    "https://www.census.gov/data/tables/time-series/demo/popest/intercensal-2000-2010-counties.html",
+    "https://www.census.gov/data/datasets/time-series/demo/popest/2010s-counties-total.html#par_textimage_739801612",
+    "https://www1.nyc.gov/site/nypd/stats/crime-statistics/historical.page",
+    "https://www1.nyc.gov/site/nypd/bureaus/patrol/precincts-landing.page"))
+})
 ```
