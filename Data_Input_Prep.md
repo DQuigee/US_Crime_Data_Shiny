@@ -7,14 +7,14 @@ Daniela Quigee (dq2147)
 library(tidyverse)
 ```
 
-    ## ── Attaching packages ────────────────────────────────────────────────────────────────────────────── tidyverse 1.3.0 ──
+    ## ── Attaching packages ──────────────────────────────────────────────────────────────────────────────────────── tidyverse 1.3.0 ──
 
     ## ✓ ggplot2 3.3.2     ✓ purrr   0.3.4
     ## ✓ tibble  3.0.1     ✓ dplyr   1.0.0
     ## ✓ tidyr   1.1.0     ✓ stringr 1.4.0
     ## ✓ readr   1.3.1     ✓ forcats 0.5.0
 
-    ## ── Conflicts ───────────────────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
+    ## ── Conflicts ─────────────────────────────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
     ## x dplyr::filter() masks stats::filter()
     ## x dplyr::lag()    masks stats::lag()
 
@@ -531,9 +531,111 @@ data_murder_weapon = bind_rows(
   data_murder_weapon_2011) 
 ```
 
+# Crime Rates In NYC By Borough
+
+``` r
+data_NYC_crime = read_excel(
+  "data/Crime_in_NYC/Crime_Data_NYC_2000_2019.xlsx",
+  range = "A1:W617",
+  col_types = c("numeric", "text", "text", 
+                "numeric", "numeric", "numeric", 
+                "numeric", "numeric", "numeric", 
+                "numeric", "numeric", "numeric", 
+                "numeric", "numeric", "numeric", 
+                "numeric", "numeric", "numeric", 
+                "numeric", "numeric", "numeric", 
+                "numeric", "numeric")) %>% 
+  janitor::clean_names() %>% 
+  mutate(
+    crime = tolower(crime)) %>% 
+  select(-pct) %>% 
+  filter(crime != "total seven major felony offenses") %>% 
+  group_by(borough, crime) %>% 
+  summarize(
+    x2000 = sum(x2000),
+    x2001 = sum(x2001),
+    x2002 = sum(x2002),
+    x2003 = sum(x2003),
+    x2004 = sum(x2004),
+    x2005 = sum(x2005),
+    x2006 = sum(x2006),
+    x2007 = sum(x2007),
+    x2008 = sum(x2008),
+    x2009 = sum(x2009),
+    x2010 = sum(x2010),
+    x2011 = sum(x2011),
+    x2012 = sum(x2012),
+    x2013 = sum(x2013),
+    x2014 = sum(x2014),
+    x2015 = sum(x2015),
+    x2016 = sum(x2016),
+    x2017 = sum(x2017),
+    x2018 = sum(x2018),
+    x2019 = sum(x2019)) %>%  
+  pivot_longer(
+    x2000:x2019,
+    names_to = "year",
+    values_to = "number",
+    names_prefix = "x") 
+```
+
+    ## `summarise()` regrouping output by 'borough' (override with `.groups` argument)
+
+``` r
+data_NYC_populaton = read_excel(
+  "data/Crime_in_NYC/Population_NYC_2000_2019.xlsx",
+  col_types = c("text", "numeric", "numeric", 
+        "numeric", "numeric", "numeric", 
+        "numeric", "numeric", "numeric", 
+        "numeric", "numeric", "numeric", 
+        "numeric", "numeric", "numeric", 
+        "numeric", "numeric", "numeric", 
+        "numeric", "numeric", "numeric")) %>% 
+  janitor::clean_names() %>% 
+  pivot_longer(
+    x2000:x2019,
+    names_to = "year",
+    values_to = "population",
+    names_prefix = "x") 
+
+data_NYC = left_join(data_NYC_crime, data_NYC_populaton, by = c("borough", "year"))
+
+data_NYC = data_NYC %>% 
+  mutate(
+    rate_per_100_000 = round(number/(population/100000), digits = 2))
+
+
+# NYC Map Data
+
+r = GET('http://data.beta.nyc//dataset/0ff93d2d-90ba-457c-9f7e-39e47bf2ac5f/resource/35dd04fb-81b3-479b-a074-a27a37888ce7/download/d085e2f8d0b54d4590b1e7d1f35594c1pediacitiesnycneighborhoods.geojson')
+
+nyc_map_data = readOGR(content(r,'text'), 'OGRGeoJSON', verbose = F)
+```
+
+    ## No encoding supplied: defaulting to UTF-8.
+
+``` r
+nyc_map_data_df = broom::tidy(nyc_map_data, region = "borough")
+```
+
+    ## Warning in RGEOSUnaryPredFunc(spgeom, byid, "rgeos_isvalid"): Self-intersection
+    ## at or near point -73.998769409999994 40.671602049999997
+
+    ## SpP is invalid
+
+    ## Warning in rgeos::gUnaryUnion(spgeom = SpP, id = IDs): Invalid objects found;
+    ## consider using set_RGEOS_CheckValidity(2L)
+
+``` r
+nyc_map_data_df = nyc_map_data_df %>% rename(borough = id)
+```
+
 ``` r
 save(data_state, file = "./data/Crime_In_US_By_State/data_state.RData")
 save(data_region, file = "./data/Crime_In_US_By_Region/data_region.RData")
 save(data_clearance_region, file = "./data/Clearance_Rates_By_Region/data_clearance_region.RData")
 save(data_murder_weapon, file = "./data/Murder_Weapons_By_State/data_murder_weapon.RData")
+
+save(data_NYC, file = "./data/Crime_in_NYC/data_NYC.RData")
+save(nyc_map_data_df, file = "./data/Crime_in_NYC/nyc_map_data_df.RData")
 ```
