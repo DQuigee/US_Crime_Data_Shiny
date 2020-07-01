@@ -29,6 +29,8 @@ load(file = "./data/Crime_In_US_By_State/data_state.RData")
 load(file = "./data/Crime_In_US_By_Region/data_region.RData")
 load(file = "./data/Clearance_Rates_By_Region/data_clearance_region.RData")
 load(file = "./data/Murder_Weapons_By_State/data_murder_weapon.RData")
+load(file = "./data/Crime_in_NYC/data_NYC.RData")
+load(file = "./data/Crime_in_NYC/nyc_map_data_df.RData")
 
 
 
@@ -878,10 +880,24 @@ NYC Crime Rates
 Column {.sidebar data-width=310}
 -----------------------------------------------------------------------
 
+
 ```{r Sidebar_Crime_Data_NYC}
-
-
+crime_formes_nyc = c(
+  "burglary",
+  "felony assault",
+  "grand larceny",
+  "grand larceny of motor vehicle",
+  "murder & non negl. manslaughter",
+  "rape",
+  "robbery")
+  
+selectInput(
+  "crime_form_nyc", 
+  label = h3("Choose Type of Crime"),
+  choices = as.list(crime_formes_nyc))
 ```
+
+
 
 
 
@@ -890,9 +906,66 @@ Column {.tabset}
 
 ### Map
 
-```{r Map_NYC}
+```{r NYC_Map}
+sliderInput("year_nyc", 
+            label = "Choose Year", 
+            min = 2000, 
+            max = 2019, 
+            value = 2019, 
+            step = 1,
+            sep = "")
 
+renderPlotly({
+   col = colorRampPalette(brewer.pal(9, "BuPu"))(400)
+  
+   min_value = data_NYC %>%
+    filter(crime == input$crime_form_nyc) %>% 
+    pull(rate_per_100_000) %>% 
+    min() %>% 
+    floor()
+  
+  max_value = data_NYC %>%
+    filter(crime == input$crime_form_nyc) %>% 
+    pull(rate_per_100_000) %>% 
+    max() %>% 
+    ceiling()
+  
+  
+  data_NYC_tmp = data_NYC %>%
+    filter(crime == input$crime_form_nyc & year == input$year_nyc)
 
+  nyc_map_data_df = left_join(nyc_map_data_df, data_NYC_tmp, by = "borough")
+
+  plot_NYC = ggplot(
+    nyc_map_data_df,
+    aes(
+      x = long,
+      y = lat,
+      group = group,
+      #frame = year,
+      fill = rate_per_100_000,
+      text = paste(
+        "Borough: ", borough,
+        "\nYear:", input$year_nyc, 
+        "\nCrime: ", input$crime_form_nyc,
+        "\nRate per 100,000: ", rate_per_100_000))) +
+    geom_polygon(color = "gray33") +
+    theme(
+      panel.background = element_blank(),
+      axis.line = element_blank(),
+      axis.text.x = element_blank(),
+      axis.text.y = element_blank(),
+      axis.title.x = element_blank(),
+      axis.title.y = element_blank(),
+      axis.ticks = element_blank()) +
+    scale_fill_gradientn(
+      colors = col, 
+      limits = c(min_value, max_value),
+      name = "rate per 100,000") +
+    ggtitle(paste("<b>", input$crime_form_nyc, " - rate per 100,000 people - " , input$year_nyc, "</b>"))
+
+  ggplotly(plot_NYC, tooltip = "text", height = 500) 
+})
 ```
 
 ### Time Plot
