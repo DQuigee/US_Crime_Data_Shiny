@@ -968,13 +968,37 @@ renderPlotly({
 })
 ```
 
+
+
 ### Time Plot
  
-```{r Time_Plot_NYC}
-
+```{r NYC_Time_Plot}
+renderPlotly({
+  
+  data_NYC %>% 
+    filter(crime == input$crime_form_nyc) %>% 
+    plot_ly(
+      x = ~year,
+      y = ~rate_per_100_000,
+      color = ~as.factor(borough),
+      type = "scatter", 
+      mode = 'lines+markers',
+      alpha = 0.9,
+      text =  ~paste("Borough: ", borough, "\n",input$crime_form_nyc, " - "  ,sep = ""),
+        hovertemplate = "%{text}rate per 100,000: %{y}\nYear: %{x}<extra></extra>") %>% 
+    layout(
+        xaxis = list(
+          title = "Year",
+          dtick = 2,
+          tick0 = 2000,
+          range = c(2000, 2019),
+          tickmode = "linear",
+          titlefont = list(size = 13),
+          tickfont = list(size = 11)),
+        yaxis = list(
+          title = ~paste(input$crime_form_nyc, "\nrate per 100,000 people\n" ,sep = " "),
+          titlefont = list(size = 13),
+          tickfont = list(size = 11)))
+})
 
 ```
-
-
-About 
-=====================================
